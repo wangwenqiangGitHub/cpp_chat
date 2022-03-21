@@ -5,6 +5,9 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
+
+
+ChatDataBase* Server:: chatdb = new ChatDataBase;
 Server::Server(const char* ip, int port)
 {
     chatList = new ChatInfo;
@@ -23,6 +26,9 @@ Server::Server(const char* ip, int port)
         cout << " evconnlistener_new_bind error" << endl;
         
     }
+    
+    cout << "服务器初始化成功，开始监听客户端" << endl;
+
     // 监听集合
     event_base_dispatch(base); 
 }
@@ -77,10 +83,64 @@ void Server::read_cb(struct bufferevent * bev, void *ctx)
         cout << "bufferevent_read" << endl;
     }
 
-    cout << buf << endl;
+    cout << buf << sizeof(buf)<<endl;
     // 注册
+    Json::Reader reader;        //解析json对象
+    Json::FastWriter writer;    //封装json对象
+    Json::Value val;
+    //{"cmd":"register","user":"小明",“password”:"111111"};
+    //#sucess
+    //{"cmd":"register_reply","result":"success"};
+    if(!reader.parse(buf,val)) //字符串解析成json对象
+    {
+        cout << "json 解析失败" << endl;
+    }
+
+    string cmd = val["cmd"].asString();
+    if (cmd == "register") //注册
+    {
+        //printf("<%s %d>\n",__func__, __LINE__);
+        server_register(bev, val);
+        //printf("<%s %d>\n",__func__, __LINE__);
+    }
     // 登录
 }
 void Server::event_cb(struct bufferevent* bev, short what, void* ctx)
 { 
+}
+
+void Server::server_register(struct bufferevent* bev, Json::Value& val)
+{
+    //printf("<%s %d>\n",__func__, __LINE__);
+    chatdb->my_database_connect("user");
+    //printf("<%s %d>\n",__func__, __LINE__);
+    if(chatdb->my_database_get_user_exist(val["user"].asString()))//用户存在
+    {
+        //printf("<%s %d>\n",__func__, __LINE__);
+        Json::Value val;
+        val["cmd"] = "register_reply";
+        val["result"] = "failure";
+        //string s = Json::FastWriter().write(val); 
+        int res = bufferevent_write(bev,Json::FastWriter().write(val).c_str(),strlen(Json::FastWriter().write(val).c_str()));
+        if(res < 0)
+            printf("bufferevent_write\n");
+
+    }
+    else //用户不存在
+    {
+        chatdb->my_database_user_password(val["user"].asString(), val["password"].asString());
+        Json::Value val;
+        val["cmd"] = "register_reply";
+        val["result"] = "success";
+
+        string s = Json::FastWriter().write(val);
+        if(bufferevent_write(bev, s.c_str(), strlen(s.c_str())) < 0)
+        {
+            printf("buferevent write\n");
+        }
+    }
+
+    chatdb->my_database_disconnect();
+
+    
 }

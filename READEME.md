@@ -44,7 +44,39 @@ select * from `学习交流群3`
 
 select member from `学习交流群1`;
 
+#创建user
+use user;
+#创建表
+create table 小明 (password varchar(16), friend varchar(4096));
+#查找
+show tables like "小明";
+#
+insert
+# 删除
+drop table 小明；
+
 
 ```
 
 # jsoncpp
+```sh
+sudo apt install libjsoncpp-dev
+
+```
+# json-c
+```sh
+sudo apt install libjson-c-dev
+```
+
+# 服务器注册
+1. 注册， 客户端发送
+```json
+{"cmd":"register","user":"小明",“password”:"111111"};
+#sucess
+{"cmd":"register_reply","result":"success"};
+#sucess
+{"cmd":"register_reply","result":"failure"};
+
+```
+
+

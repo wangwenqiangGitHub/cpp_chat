@@ -8,7 +8,7 @@
 #include <thread>
 #include <iostream>
 #include <event2/listener.h>
-
+#include <jsoncpp/json/json.h>
 #include "chatInfo.h"
 using namespace std;
 
@@ -21,16 +21,17 @@ public:
     ~Server();
 
 private:
-    struct event_base *base;        // 事件集合
-    struct evconnlistener *listener;  // 监听事件
-    ChatInfo* chatList;                //链表对象，含有两个链表，user group
-
+    struct event_base *base;           // 事件集合
+    struct evconnlistener *listener;   // 监听事件
+    ChatInfo* chatList;                // 链表对象，含有两个链表，user group
+    static ChatDataBase* chatdb;                  // 数据库对象;
 private:
     static void listener_cb(struct evconnlistener* listener, evutil_socket_t fd, struct sockaddr* addr, int socklen, void *arg);
 
     static void client_handler(int fd);
     static void read_cb(struct bufferevent * bev, void *ctx);
     static void event_cb(struct bufferevent* bev, short what, void* ctx);
+    static void server_register(struct bufferevent* bev, Json::Value& val);
 };
 
 

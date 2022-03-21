@@ -2,3 +2,6 @@ main
 tags
 libevent-2.1.12-stable.tar.gz
 libevent-2.1.12-stable/
+build.sh
+client/client
+

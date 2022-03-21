@@ -25,7 +25,7 @@ ChatInfo::ChatInfo()
         GroupUser u;
         while(1)
         {
-            ep = member.find('|');
+            ep = member.find('|', sp);
             if(-1 == ep)
                 break;
             u.name = member.substr(sp, ep - sp); 
@@ -34,15 +34,30 @@ ChatInfo::ChatInfo()
             u.name.clear();
         }
         u.name = member.substr(sp, member.size() - sp);
+        g.l->push_back(u);
         group_info->push_back(g);
     }
-    
-//    for(auto it : group_info)
-//    {
-//        cout << "group name: " << it->name << endl;
-//
-//    }
-
+#if 0 
+    for(list<Group>::iterator it = group_info->begin(); it!=group_info->end(); it++)
+    {
+        cout << "group name: " << it->name << endl;
+        for(list<GroupUser>::iterator i = it->l->begin(); i!= it->l->end(); i++)
+        {
+            cout << "groupe user name: " <<i->name << endl;
+        }
+    }
+#endif
+    //打印数据库信息
+    for(auto& it : *group_info)
+    {
+        cout << "group name: " << it.name << endl;
+        for(auto& i : *(it.l))
+        {
+            cout << "groupe user name: " <<i.name << endl;
+        }
+    }
+     my_database->my_database_disconnect();
+     cout << "链表初始化成功" << endl;
 
 }
 

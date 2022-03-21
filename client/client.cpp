@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <string.h>
+#include <json-c/json.h>
 
 int main()
 {
@@ -27,17 +28,21 @@ int main()
         exit(1);
     }
 
-    char buf[32] = "hello server";
-    int nSend = send(sockfd, buf, sizeof(buf), 0);
+    struct json_object *obj = json_object_new_object();
+    json_object_object_add(obj, "cmd", json_object_new_string("register"));
+    json_object_object_add(obj, "user", json_object_new_string("小明"));
+    json_object_object_add(obj, "password", json_object_new_string("11111"));
+    
+    const char* buf = json_object_to_json_string(obj);
 
-//    while(1)
-//    {
-//        printf("please input send data"\n);
-//        
-//        if(!nSend || nSend == SOCKET_ERROR)
-//            break;
-//    }
-//
+    printf("buf:%s\n", buf);
+    int nSend = send(sockfd, buf, strlen(buf), 0);
+    if( nSend == -1)
+        printf("send erro\n");
+    char s[128] = {0};
+    ret = recv(sockfd, s, sizeof(s), 0);
+    printf("接收服务器的回复：%s\n", s);
+
     close(sockfd);
     return 0;
 }
