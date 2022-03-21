@@ -1,0 +1,50 @@
+# libevent
+
+```sh
+wget https://github.com/libevent/libevent/releases/download/release-2.1.12-stable/libevent-2.1.12-stable.tar.gz
+cd libevent-2
+./configure --prefix=/usr
+make
+sudo make install
+```
+
+# mysql
+```sh
+sudo apt install mysql-server mysql-client libmysqlclient-dev 
+
+sudo apt install mycli
+```
+- mysql配置
+```sql
+mysql -uroot -p;
+show databases;
+
+#创建两个数据库
+create database user;
+create database chatgroup;
+
+show databases;
+
+use chatgroup;
+
+#创建群，
+create table 学习交流群1 (owner varchar(32), member varchar(2048)) char set utf8;
+create table 学习交流群2 (owner varchar(32), member varchar(2048)) char set utf8;
+create table 学习交流群3 (owner varchar(32), member varchar(2048)) char set utf8;
+
+show tables;
+insert into `学习交流群1` values  ("小张","小王|小李|小张|小孟");
+insert into `学习交流群2` values  ("小刘", "小孙|小刘|小孙|小红|小明");
+insert into `学习交流群3` values  ("小冯", "小冯|小费|小花");
+
+
+select * from `学习交流群1`
+select * from `学习交流群2`
+select * from `学习交流群3`
+
+select member from `学习交流群1`;
+
+
+```
+
+# jsoncpp
