@@ -72,11 +72,10 @@ sudo apt install libjson-c-dev
 1. 注册， 客户端发送
 ```json
 {"cmd":"register","user":"小明",“password”:"111111"};
-#sucess
+//sucess
 {"cmd":"register_reply","result":"success"};
-#sucess
+//failure
 {"cmd":"register_reply","result":"failure"};
-
 ```
 
 
